@@ -1,0 +1,8 @@
+[package]
+name = "termpro"
+version = "0.1.0"
+authors = ["Aleš Katona <almindor@gmail.com>"]
+
+[dependencies.termion]
+git = "https://github.com/Ticki/termion.git"
+features = ["nightly"]
