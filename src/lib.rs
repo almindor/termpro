@@ -1,6 +1,6 @@
 extern crate termion;
 
-use termion::{IntoRawMode};
+use termion::raw::IntoRawMode;
 use std::io::{Read, Write, stdout, stdin, Error, ErrorKind};
 use std::fs;
 use std::path::Path;
