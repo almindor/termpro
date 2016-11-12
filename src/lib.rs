@@ -13,6 +13,7 @@ pub struct Expansion {
 }
 
 impl Expansion {
+    #[allow(dead_code)]
     fn new() -> Expansion {
         Expansion {
             entry: String::new(),
@@ -70,11 +71,11 @@ impl TerminalPrompt {
 
     pub fn complete(&mut self) -> Result<Option<Expansion>, Error> {
         for e in &mut self.expansions {
-            if !try!(e.takes(self.data.as_str())) {
+            if !e.takes(self.data.as_str())? {
                 continue;
             }
 
-            return Ok(Some(try!(e.expand(self.data.as_str()))));
+            return Ok(Some(e.expand(self.data.as_str())?));
         }
 
         Ok(None)
@@ -95,15 +96,15 @@ impl TerminalPrompt {
         let stdin = stdin.lock();
         let mut bytes = stdin.bytes();
 
-        try!(stdout.write(self.prompt.as_bytes()));
-        try!(stdout.flush());
+        stdout.write(self.prompt.as_bytes())?;
+        stdout.flush()?;
 
         loop {
             let b = bytes.next().unwrap().unwrap();
 
             match b {
                 13 => {
-                    try!(stdout.write(&[13, 10]));
+                    stdout.write(&[13, 10])?;
                     return Ok(self.done());
                 },
                 27 => Ok(0),
@@ -115,7 +116,7 @@ impl TerminalPrompt {
                     },
                     false => Ok(0)
                 },
-                9 => match try!(self.complete()) {
+                9 => match self.complete()? {
                     None => Ok(0),
                     Some(exp) => {
                         if exp.is_resolved() {
